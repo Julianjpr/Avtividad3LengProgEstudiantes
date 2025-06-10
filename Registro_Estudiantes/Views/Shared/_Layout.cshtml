@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Registro de Estudiantes</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <h1>Registro de Estudiantes</h1>
+        <nav>
+            <a href="@Url.Action("Index", "Estudiantes")">Registrar</a> |
+            <a href="@Url.Action("Lista", "Estudiantes")">Lista</a>
+        </nav>
+    </header>
+    <div class="content">
+        @RenderBody()
+        @RenderSection("Scripts", required: false)
+
+    </div>
+    <footer>
+        <hr />
+        <p>&copy; @DateTime.Now.Year - Proyecto MVC</p>
+    </footer>
+</body>
+</html>

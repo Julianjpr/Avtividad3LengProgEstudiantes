@@ -1,0 +1,138 @@
+﻿@model Registro_Estudiantes.Models.EstudiantesViewModels
+
+@{
+    ViewData["Title"] = "Editar Estudiante";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Editar" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Matricula" /> @* CAMBIO: De matricula a Matricula *@
+
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="carrera" class="control-label"></label>
+                <select asp-for="carrera" asp-items="@Model.opcionescarrera" class="form-control"></select>
+                <span asp-validation-for="carrera" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Correo" class="control-label"></label>
+                <input asp-for="Correo" class="form-control" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Edad" class="control-label"></label>
+                <input asp-for="Edad" type="date" class="form-control" />
+                <span asp-validation-for="Edad" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Genero" class="control-label"></label><br />
+                <div class="form-check form-check-inline">
+                    <input type="radio" asp-for="Genero" value="Masculino" class="form-check-input" id="generoMasculinoEdit" />
+                    <label class="form-check-label" for="generoMasculinoEdit">Masculino</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" asp-for="Genero" value="Femenino" class="form-check-input" id="generoFemeninoEdit" />
+                    <label class="form-check-label" for="generoFemeninoEdit">Femenino</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" asp-for="Genero" value="Otro" class="form-check-input" id="generoOtroEdit" />
+                    <label class="form-check-label" for="generoOtroEdit">Otro</label>
+                </div>
+                <span asp-validation-for="Genero" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Turno" class="control-label"></label>
+                <select asp-for="Turno" asp-items="@Model.Opcionesturno" class="form-control"></select>
+                <span asp-validation-for="Turno" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TipoIngreso" class="control-label"></label>
+                <select asp-for="TipoIngreso" asp-items="@Model.Opcionestipoingreso" class="form-control"></select>
+                <span asp-validation-for="TipoIngreso" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <input type="checkbox" asp-for="EstaBecado" class="form-check-input" id="estaBecadoCheckboxEdit" />
+                <label class="form-check-label" for="estaBecadoCheckboxEdit" asp-for="EstaBecado"></label>
+                <span asp-validation-for="EstaBecado" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" id="porcentajeBecaGroupEdit">
+                <label asp-for="PorcentajeBeca" class="control-label"></label>
+                <input asp-for="PorcentajeBeca" class="form-control" type="number" min="0" max="100" />
+                <span asp-validation-for="PorcentajeBeca" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <input type="checkbox" asp-for="TerminosYCondiciones" class="form-check-input" id="terminosCheckboxEdit" />
+                <label class="form-check-label" for="terminosCheckboxEdit" asp-for="TerminosYCondiciones"></label>
+                <span asp-validation-for="TerminosYCondiciones" class="text-danger"></span>
+            </div>
+
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+                <a asp-action="Lista" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // JavaScript para mostrar/ocultar el campo de porcentaje de beca en la vista de edición
+        document.addEventListener('DOMContentLoaded', function() {
+            const estaBecadoCheckbox = document.getElementById('estaBecadoCheckboxEdit');
+            const porcentajeBecaGroup = document.getElementById('porcentajeBecaGroupEdit');
+            const porcentajeBecaInput = document.querySelector('#porcentajeBecaGroupEdit input[type="number"]');
+
+            function togglePorcentajeBeca() {
+                if (estaBecadoCheckbox.checked) {
+                    porcentajeBecaGroup.style.display = 'block';
+                    // NOTA: 'required' se maneja mejor con Data Annotations en el modelo
+                    // y la validación condicional en el controlador para robustez.
+                    // Aquí, solo ocultamos/mostramos.
+                } else {
+                    porcentajeBecaGroup.style.display = 'none';
+                    porcentajeBecaInput.value = ''; // Limpiar el valor si se desactiva
+                    // Forzar revalidación si el campo es ocultado
+                    if ($.validator && $.validator.unobtrusive) {
+                        $(porcentajeBecaInput).valid();
+                    }
+                }
+            }
+
+            // Llamar al inicio para establecer el estado inicial (si el modelo ya tiene un valor)
+            togglePorcentajeBeca();
+
+            // Añadir el evento listener para cambios en el checkbox
+            estaBecadoCheckbox.addEventListener('change', togglePorcentajeBeca);
+        });
+    </script>
+}
